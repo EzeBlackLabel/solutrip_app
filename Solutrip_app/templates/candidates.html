@@ -1,0 +1,29 @@
+<!-- Adding a Layout template  -->
+{% extends 'layout.html' %}
+{% block content %} 
+    <section id="carousel">
+        <h2>Available roles</h2>
+        <div id="slides">
+        <a href="{{ url_for('static', filename='1.jpg') }}">
+            <img src="{{ url_for('static', filename='1.jpg') }}" alt="Job description 1">
+        </a>
+        <a href="{{ url_for('static', filename='2.jpg') }}">
+            <img src="{{ url_for('static', filename='2.jpg') }}" alt="Job description 2">
+        </a>
+        <a href="{{ url_for('static', filename='3.jpg') }}">
+            <img src="{{ url_for('static', filename='3.jpg') }}" alt="Job description 3">
+        </a>
+        </div>
+        <div class="button-container">
+        <a href="#" id="prev">Prev</a>
+        <a href="#" id="next">Next</a>
+        </div>
+    </section>
+  <!-- Search Section -->
+    <section id="search">
+        <input type="text" placeholder="Search for Remote Friendly Roles">
+        <button>Search</button>
+    </section>
+
+
+{% endblock %}
