@@ -1,7 +1,7 @@
-from Solutriptest import app,db
+from Solutrip_app import app,db
 from flask import render_template, url_for, flash, redirect
-from Solutriptest.models import User, UserInfo, Company
-from Solutriptest.forms import RegistrationForm, LoginForm
+from Solutrip_app.models import User, UserInfo, Company
+from Solutrip_app.forms import RegistrationForm, LoginForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user
 

@@ -10,4 +10,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///solutrip_site.db'
 db = SQLAlchemy(app) 
 login_manager = LoginManager(app)
 
-from Solutriptest import routes
+from Solutrip_app import routes
