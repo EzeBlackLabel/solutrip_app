@@ -288,3 +288,8 @@ body {
 .border-bottom {
   color: #3366ff;
 }
+
+#account h1,h2{
+    color: #3366ff;
+    margin: 50px 0;
+}

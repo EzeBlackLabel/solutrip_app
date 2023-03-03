@@ -1,9 +1,9 @@
 from Solutrip_app import app,db
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from Solutrip_app.models import User, UserInfo, Company
 from Solutrip_app.forms import RegistrationForm, LoginForm
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route("/")
 @app.route("/home")
@@ -57,8 +57,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash (user.password, form.password.data):
             login_user(user, remember= form.remember.data)
+            #To redirect to next page.
+            next_page = request.args.get('next')
             flash(f"Login successful { form.email.data }!", "success")
-            return redirect(url_for('about'))
+            return redirect(next_page) if next_page else redirect(url_for('about'))
         else:    
             flash(f"Login unsuccessful, please check username and password.", "danger")
     return render_template("login.html", title = "Login", form = form)
@@ -67,3 +69,8 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template("account.html", title = "Account")

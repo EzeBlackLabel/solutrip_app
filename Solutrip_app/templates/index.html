@@ -1,55 +1,12 @@
-<html>
-  <head>
-   <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Title -->
-    <title>Solutrip Talent Recruitment</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- Links to CSS & JS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
-    <!-- Fav icon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+{% extends 'layout.html' %}
 
-  </head>
-
-  <body class="body">
-    <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Solutrip Recruitment</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('candidates')}}">Candidates</a>
-              <a class="nav-item nav-link" href="{{ url_for('employers')}}">Employers</a>
-              <a class="nav-item nav-link" href="{{ url_for('about')}}">About</a>
-              <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
-  
-    <main>
-      <section>
-        <h1 class="text-center display-4 my-3">Solutrip Talent Recruitment</h1>
-        <p class="display-4">Find your next remote-friendly role here.</p>
-        <a href="{{ url_for('login') }}" class="btn-can btn-primary">Candidate Login</a>
-        <a href="{{ url_for('login') }}" class="btn-emp btn-primary"">Employer Login</a>
-      </section>
-    </main>
-    
-    
-    <footer class="index-foot">
-      <p>&copy; Solutrip Remote Friendly Recruitment 2023</p>
-    </footer>
-        <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% block content %}
+<main>
+  <section>
+    <h1 class="text-center display-4 my-3">Solutrip Talent Recruitment</h1>
+    <p class="display-4">Find your next remote-friendly role here.</p>
+    <a href="{{ url_for('login') }}" class="btn-can btn-primary">Candidate Login</a>
+    <a href="{{ url_for('login') }}" class="btn-emp btn-primary"">Employer Login</a>
+  </section>
+</main>
+{% endblock %}
