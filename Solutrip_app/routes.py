@@ -3,7 +3,7 @@ from flask import render_template, url_for, flash, redirect
 from Solutrip_app.models import User, UserInfo, Company
 from Solutrip_app.forms import RegistrationForm, LoginForm
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user
+from flask_login import current_user, login_user, logout_user
 
 @app.route("/")
 @app.route("/home")
@@ -25,6 +25,8 @@ def about():
 
 @app.route("/register", methods= ['GET','POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect (url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         #Hashing
@@ -43,10 +45,13 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f"Account created for {form.username.data}!", "success")
+        return redirect(url_for('home'))
     return render_template("register.html", title = "Register", form = form)
 
 @app.route("/login", methods= ['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect (url_for('home'))
     form = LoginForm()
     if form.validate_on_submit(): # Import Flash and send a confirmation message.
         user = User.query.filter_by(email=form.email.data).first()
@@ -57,3 +62,8 @@ def login():
         else:    
             flash(f"Login unsuccessful, please check username and password.", "danger")
     return render_template("login.html", title = "Login", form = form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))

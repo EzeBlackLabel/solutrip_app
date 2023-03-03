@@ -31,13 +31,19 @@
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Home</a>
+          <div class="collapse navbar-collapse d-flex" id="navbarToggle">
+            <div class="navbar-nav mr-auto flex-grow-1">
+              <a class="nav-item nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('candidates')}}">Candidates</a>
               <a class="nav-item nav-link" href="{{ url_for('employers')}}">Employers</a>
               <a class="nav-item nav-link" href="{{ url_for('about')}}">About</a>
+            </div>
+            <div class="navbar-nav ml-auto">
+              {% if current_user.is_authenticated %}
+              <a class="nav-item nav-link" href="{{ url_for('logout')}}">Log Out</a>
+              {% else %}
               <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
+              {% endif %}  
             </div>
           </div>
         </div>
