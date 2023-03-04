@@ -23,7 +23,6 @@ class UserInfo(db.Model):
     location = db.Column(db.String(60)) 
     phone = db.Column(db.String(60), unique=True)
     skill = db.Column(db.String(100))
-    available = db.Column(db.Boolean)
     crypto_account = db.Column(db.String(50), unique=True)
     #Link to user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -37,7 +36,6 @@ class Company(db.Model):
     industry = db.Column(db.String(60), nullable=False) 
     phone = db.Column(db.String(60), unique=True, nullable=False)
     website = db.Column(db.String(100), nullable=False)
-    hired = db.Column(db.Boolean, nullable=False)
     #Link to User, UserInfo
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)  

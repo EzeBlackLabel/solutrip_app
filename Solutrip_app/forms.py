@@ -44,7 +44,6 @@ class UpdateForm(FlaskForm):
     location = StringField('Location', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
     skill = StringField('Skill', validators=[DataRequired()])
-    available = BooleanField('Available',validators=[DataRequired()])
     crypto_account = StringField('Crypto account', validators=[DataRequired()])
     submit = SubmitField('Update')
 
