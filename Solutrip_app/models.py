@@ -24,7 +24,7 @@ class UserInfo(db.Model):
     phone = db.Column(db.String(60), unique=True)
     skill = db.Column(db.String(100))
     available = db.Column(db.Boolean)
-    bank_details = db.Column(db.String(50), unique=True)
+    crypto_account = db.Column(db.String(50), unique=True)
     #Link to user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

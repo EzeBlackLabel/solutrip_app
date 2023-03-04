@@ -1,7 +1,7 @@
 from Solutrip_app import app,db
 from flask import render_template, url_for, flash, redirect, request
 from Solutrip_app.models import User, UserInfo, Company
-from Solutrip_app.forms import RegistrationForm, LoginForm
+from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -66,8 +66,9 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/account")
+@app.route("/account", methods= ['GET','POST'])
 @login_required
 def account():
+    form = UpdateForm()
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template("account.html", title = "Account", image_file = image_file)
+    return render_template("account.html", title = "Account", image_file = image_file, form = form)
