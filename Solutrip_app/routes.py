@@ -31,11 +31,7 @@ def register():
     if form.validate_on_submit():
         #Hashing
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        # Check if user with the same email already exists in the database
         user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            flash("An account with this email already exists!", "danger")
-            return redirect(url_for('login'))
         # Create a new user with the provided details
         user = User(
             username=form.username.data,
