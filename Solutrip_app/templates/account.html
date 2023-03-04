@@ -1,5 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %} 
-    <h1> {{" "}} </h1>
-    <h2> {{ "Welcome to Solutrip Talent: " + current_user.username }} </h2>
+    <div class="content-section-account">
+        <div class="media mx-auto">
+        <img class="rounded-circle account-img" src="{{ image_file }}" width="150" height="150">
+        <div class="media-body">
+            <h2 class="account-heading">{{ current_user.username }}</h2>
+            <p class="text-secondary"> {{ current_user.email }}</p>
+        </div>
+        </div>
+        <!-- FORM HERE -->
+    </div>
 {% endblock content %}

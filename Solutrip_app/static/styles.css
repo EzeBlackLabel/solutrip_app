@@ -292,3 +292,8 @@ body {
 #account h1,h2{
     color: #3366ff;
 }
+
+.content-section-account {
+  margin-top: 50px;
+  text-align: center;
+}

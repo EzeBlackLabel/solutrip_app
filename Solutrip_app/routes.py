@@ -45,7 +45,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f"Account created for {form.username.data}!", "success")
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template("register.html", title = "Register", form = form)
 
 @app.route("/login", methods= ['GET','POST'])
@@ -73,4 +73,5 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    return render_template("account.html", title = "Account")
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template("account.html", title = "Account", image_file = image_file)
