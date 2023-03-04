@@ -303,3 +303,7 @@ body {
   text-align: left;
   margin-bottom: 60px;
 }
+
+.form-group {
+  margin-bottom: 20px;
+}

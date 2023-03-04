@@ -9,87 +9,102 @@
         </div>
         </div>
         <div class="content-section-update">
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-3 mt-3">Update Information</legend>
-                    <div class="form-group mb-2">
-                        {{ form.name.label(class="form-control-label") }}
-                        <!-- Handling errors on form via Bootstrap -->
-                        {% if form.name.errors %}
-                            {{ form.name(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.name(class="form-control form-control-lg flex-column") }}    
-                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.name.label.text }}</label>
+                            <!-- Handling errors on form via Bootstrap -->
+                            {% if form.name.errors %}
+                                {{ form.name(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.name(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.surname.label.text }}</label>
+                            {% if form.surname.errors %}
+                                {{ form.surname(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.surname.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.surname(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
                     </div>
+                    <div class ="row">     
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.location.label.text }}</label>
+                            {% if form.location.errors %}
+                                {{ form.location(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.location(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.phone.label.text }}</label>
+                            {% if form.phone.errors %}
+                                {{ form.phone(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.phone(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                    </div>    
+                    <div class="row"> 
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.skill.label.text }}</label>
+                            {% if form.skill.errors %}
+                                {{ form.skill(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.skill(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.crypto_account.label.text }}</label>
+                            {% if form.crypto_account.errors %}
+                                {{ form.crypto_account(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.crypto_account(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                    </div>    
                     <div class="form-group mb-2">
-                        {{ form.surname.label(class="form-control-label") }}
-                        {% if form.surname.errors %}
-                            {{ form.surname(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.surname.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.surname(class="form-control form-control-lg flex-column") }}    
-                        {% endif %}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form.location.label(class="form-control-label") }}
-                        {% if form.location.errors %}
-                            {{ form.location(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.location(class="form-control form-control-lg flex-column") }}    
-                        {% endif %}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form.phone.label(class="form-control-label") }}
-                        {% if form.phone.errors %}
-                            {{ form.phone(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.phone(class="form-control form-control-lg flex-column") }}    
-                        {% endif %}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form.skill.label(class="form-control-label") }}
-                        {% if form.skill.errors %}
-                            {{ form.skill(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.skill(class="form-control form-control-lg flex-column") }}    
-                        {% endif %}
-                    </div>
-                    <div class="form-group mb-2">
-                        {{ form.crypto_account.label(class="form-control-label") }}
-                        {% if form.crypto_account.errors %}
-                            {{ form.crypto_account(class="form-control form-control-lg flex-column is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.name.errors%} 
-                                    <span> {{ error }}</span>
-                                {% endfor %}
-                            </div>    
-                        {% else %}
-                            {{ form.crypto_account(class="form-control form-control-lg flex-column") }}    
+                        {{ form.cv.label() }} <br>
+                        {{ form.cv(class="form-control-file") }}
+                        {% if form.cv.errors %}
+                            {% for error in form.cv.errors%} 
+                            <span class="text-danger"> {{ error }} </span>
+                            {% endfor %}
                         {% endif %}
                     </div>
                 </fieldset>

@@ -1,3 +1,4 @@
+import os
 from Solutrip_app import app,db
 from flask import render_template, url_for, flash, redirect, request
 from Solutrip_app.models import User, UserInfo, Company
@@ -66,6 +67,14 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+def save_cv(form_cv):
+    _,f_ext = os.path.splitext(form_cv.filename)
+    cv_fn = current_user.username + f_ext
+    cv_path = os.path.join (app.root_path,'static/cvs', cv_fn)
+    form_cv.save(cv_path)
+    return cv_fn
+
+
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
@@ -81,6 +90,11 @@ def account():
         userinfo.phone = form.phone.data
         userinfo.skill = form.skill.data
         userinfo.crypto_account = form.crypto_account.data
+
+        if form.cv.data:
+            cv_file = save_cv(form.cv.data)
+            current_user.cv = cv_file
+
         db.session.commit()
         flash('Your account has been updated', 'success')
         return redirect(url_for('account'))

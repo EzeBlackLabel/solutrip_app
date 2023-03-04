@@ -21,7 +21,7 @@ class UserInfo(db.Model):
     name = db.Column(db.String(60)) 
     surname = db.Column(db.String(60)) 
     location = db.Column(db.String(60)) 
-    phone = db.Column(db.String(60), unique=True)
+    phone = db.Column(db.String(20), nullable=True)
     skill = db.Column(db.String(100))
     crypto_account = db.Column(db.String(50), unique=True)
     #Link to user.
