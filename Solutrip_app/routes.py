@@ -1,8 +1,8 @@
 import os
 from Solutrip_app import app,db
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, Flask
 from Solutrip_app.models import User, UserInfo, Company
-from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm
+from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -88,7 +88,9 @@ def account():
         userinfo.surname = form.surname.data
         userinfo.location = form.location.data
         userinfo.phone = form.phone.data
-        userinfo.skill = form.skill.data
+        userinfo.linkedin = form.linkedin.data
+        userinfo.experience = form.experience.data
+        userinfo.education = form.education.data
         userinfo.crypto_account = form.crypto_account.data
 
         if form.cv.data:
@@ -105,7 +107,15 @@ def account():
             form.surname.data = userinfo.surname
             form.location.data = userinfo.location
             form.phone.data = userinfo.phone
-            form.skill.data = userinfo.skill
+            form.linkedin.data = userinfo.linkedin
+            form.experience.data = userinfo.experience
+            form.education.data = userinfo.education
             form.crypto_account.data = userinfo.crypto_account
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("account.html", title="Account", image_file=image_file, form=form)
+
+@app.route("/requestpassword", methods=['GET', 'POST'])
+def request_pass():
+    form= RequestPassForm()
+    if form.validate_on_submit():
+        None

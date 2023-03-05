@@ -72,16 +72,44 @@
                     </div>    
                     <div class="row"> 
                         <div class="col-md-6 mb-2">
-                            <label class="form-control-label">{{ form.skill.label.text }}</label>
-                            {% if form.skill.errors %}
-                                {{ form.skill(class="form-control form-control-lg flex-column is-invalid") }}
+                            <label class="form-control-label">{{ form.linkedin.label.text }}</label>
+                            {% if form.linkedin.errors %}
+                                {{ form.linkedin(class="form-control form-control-lg flex-column is-invalid") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.name.errors%} 
                                         <span> {{ error }}</span>
                                     {% endfor %}
                                 </div>    
                             {% else %}
-                                {{ form.skill(class="form-control form-control-lg flex-column") }}    
+                                {{ form.linkedin(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.experience.label.text }}</label>
+                            {% if form.experience.errors %}
+                                {{ form.experience(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.experience(class="form-control form-control-lg flex-column") }}    
+                            {% endif %}
+                        </div>
+                    </div>    
+                    <div class="row"> 
+                        <div class="col-md-6 mb-2">
+                            <label class="form-control-label">{{ form.education.label.text }}</label>
+                            {% if form.education.errors %}
+                                {{ form.education(class="form-control form-control-lg flex-column is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors%} 
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>    
+                            {% else %}
+                                {{ form.education(class="form-control form-control-lg flex-column") }}    
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-2">
@@ -97,10 +125,10 @@
                                 {{ form.crypto_account(class="form-control form-control-lg flex-column") }}    
                             {% endif %}
                         </div>
-                    </div>    
-                    <div class="form-group mb-2">
+                    </div>
+                    <div class="form-group mt-2">
                         {{ form.cv.label() }} <br>
-                        {{ form.cv(class="form-control-file") }}
+                        {{ form.cv(class="form-control-file mt-2") }}
                         {% if form.cv.errors %}
                             {% for error in form.cv.errors%} 
                             <span class="text-danger"> {{ error }} </span>
@@ -109,7 +137,7 @@
                     </div>
                 </fieldset>
                 <!-- Button with top margin -->
-                <div class="form-group mb-4">
+                <div class="form-group mt-3">
                     {{ form.submit(class="btn btn-outline-info mt-1") }}
                 </div>
         </div>

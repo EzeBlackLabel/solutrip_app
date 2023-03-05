@@ -43,7 +43,18 @@ class UpdateForm(FlaskForm):
     surname = StringField('Surname', validators=[DataRequired()]) 
     location = StringField('Location', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
-    skill = StringField('Skill', validators=[DataRequired()])
-    crypto_account = StringField('Crypto account', validators=[DataRequired()])
+    experience = StringField('Experience', validators=[DataRequired()])
+    education = StringField('Education', validators=[DataRequired()])
+    linkedin = StringField('Linkedin', validators=[DataRequired()])
+    crypto_account = StringField('Crypto account', validators=[DataRequired()], description='Enter your cryptocurrency account address. If you do not have, write *')
     cv = FileField('Upload your CV', validators=[FileAllowed(['pdf', 'doc', 'docx'])])
     submit = SubmitField('Update')
+
+class RequestPassForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(),Email()])
+    submit = SubmitField('Request Password Reset')
+
+    def validate_email (self, email):
+        email = User.query.filter_by(email=email.data).first()
+        if not email:
+            raise ValidationError('Email is not registered yet. Please register first')
