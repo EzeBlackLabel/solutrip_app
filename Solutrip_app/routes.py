@@ -13,8 +13,24 @@ def home():
     return render_template("index.html")
     
 @app.route("/candidates")
-def candidates():
-    return render_template("candidates.html")
+def candidates(): 
+    JOBS = [{ "Id": 1,
+              "Title": "Data Analyst JR",
+              "Location": "Europe",
+              "Salary": "$900 USD" 
+            },
+            { "Id": 2,
+              "Title": "Full Stack Developer",
+              "Location": "Europe",
+              "Salary": "$2,800 USD" 
+            },
+            { "Id": 3,
+              "Title": "Cloud Architect",
+              "Location": "USA",
+              "Salary": "$2,000 USD" 
+            }
+    ]
+    return render_template("candidates.html", jobs = JOBS)
 
 @app.route("/employers")
 def employers():
