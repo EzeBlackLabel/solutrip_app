@@ -286,17 +286,15 @@ body {
   #page-content {
     flex: 1 0 auto;
   }
-  footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    background-color: #3366ff;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  background-color: #3366ff;
+  color: #fff;
+  width: 100%;
+}
   
 
 .body {
@@ -346,3 +344,44 @@ footer {
   bottom: 0;
   width: 100%;
 }
+
+.blog-title {
+font-size: 45px;
+margin-top: 50px;
+margin-bottom: 40px;
+text-align: center;
+}
+
+.blog-post {
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.post-title {
+  font-size: 32px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.post-author {
+  font-size: 18px;
+  color: #666;
+}
+
+.post-date {
+  font-size: 18px;
+  color: #666;
+}
+
+.post-content {
+  font-size: 22px;
+  line-height: 1.5;
+}
+
