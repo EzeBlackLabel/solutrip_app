@@ -85,16 +85,16 @@
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-control-label">{{ form.experience.label.text }}</label>
-                            {% if form.experience.errors %}
-                                {{ form.experience(class="form-control form-control-lg flex-column is-invalid") }}
+                            <label class="form-control-label">{{ form.profession.label.text }}</label>
+                            {% if form.profession.errors %}
+                                {{ form.profession(class="form-control form-control-lg flex-column is-invalid") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.name.errors%} 
                                         <span> {{ error }}</span>
                                     {% endfor %}
                                 </div>    
                             {% else %}
-                                {{ form.experience(class="form-control form-control-lg flex-column") }}    
+                                {{ form.profession(class="form-control form-control-lg flex-column") }}    
                             {% endif %}
                         </div>
                     </div>    
@@ -113,16 +113,16 @@
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-control-label">{{ form.crypto_account.label.text }}</label>
-                            {% if form.crypto_account.errors %}
-                                {{ form.crypto_account(class="form-control form-control-lg flex-column is-invalid") }}
+                            <label class="form-control-label">{{ form.github_account.label.text }}</label>
+                            {% if form.github_account.errors %}
+                                {{ form.github_account(class="form-control form-control-lg flex-column is-invalid") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.name.errors%} 
                                         <span> {{ error }}</span>
                                     {% endfor %}
                                 </div>    
                             {% else %}
-                                {{ form.crypto_account(class="form-control form-control-lg flex-column") }}    
+                                {{ form.github_account(class="form-control form-control-lg flex-column") }}    
                             {% endif %}
                         </div>
                     </div>

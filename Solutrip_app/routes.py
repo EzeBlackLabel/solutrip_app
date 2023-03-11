@@ -1,6 +1,6 @@
 import os
 from Solutrip_app import app,db
-from flask import render_template, url_for, flash, redirect, request, Flask
+from flask import render_template, url_for, flash, redirect, request
 from Solutrip_app.models import User, UserInfo, Company
 from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -137,9 +137,9 @@ def account():
         userinfo.location = form.location.data
         userinfo.phone = form.phone.data
         userinfo.linkedin = form.linkedin.data
-        userinfo.experience = form.experience.data
+        userinfo.profession = form.profession.data
         userinfo.education = form.education.data
-        userinfo.crypto_account = form.crypto_account.data
+        userinfo.github_account = form.github_account.data
 
         if form.cv.data:
             cv_file = save_cv(form.cv.data)
@@ -156,9 +156,9 @@ def account():
             form.location.data = userinfo.location
             form.phone.data = userinfo.phone
             form.linkedin.data = userinfo.linkedin
-            form.experience.data = userinfo.experience
+            form.profession.data = userinfo.profession
             form.education.data = userinfo.education
-            form.crypto_account.data = userinfo.crypto_account
+            form.github_account.data = userinfo.github_account
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("account.html", title="Account", image_file=image_file, form=form)
 
@@ -167,3 +167,21 @@ def request_pass():
     form= RequestPassForm()
     if form.validate_on_submit():
         None
+
+
+# #ADMIN SESSION
+
+# user = User.query.filter_by(email='ezelevy87@gmail.com').first()
+# user.role = 'admin'
+
+# def is_admin(user):
+#     return user.role == 'admin'
+    
+# @app.route("/admin")
+# @login_required
+# def admin():
+#     if not is_admin(current_user):
+#         flash("Sorry you must be Admin!")
+#         return redirect(url_for('home'))
+#     return render_template("admin.html")
+

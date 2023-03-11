@@ -12,14 +12,13 @@
     <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
     <!-- Fav icon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+   
     <!-- Loop titles -->
-
     {% if title %}
       <title> Solutrip - {{title}} </title>
     {% else %}
       <title> Solutrip Talent </title>
     {% endif %}
-
 
   </head>
 
@@ -38,9 +37,13 @@
               <a class="nav-item nav-link" href="{{ url_for('employers')}}">Employers</a>
               <a class="nav-item nav-link" href="{{ url_for('blog')}}">Blog</a>
               <a class="nav-item nav-link" href="{{ url_for('about')}}">About</a>
+
             </div>
             <div class="navbar-nav ml-auto">
               {% if current_user.is_authenticated %}
+              {% if current_user.role == 'admin' %}
+                <a class="nav-item nav-link" href="{{ url_for('admin')}}">Admin</a>
+              {% endif%}  
               <a class="nav-item nav-link" href="{{ url_for('account')}}">Account</a>
               <a class="nav-item nav-link" href="{{ url_for('logout')}}">Log Out</a>
               {% else %}
