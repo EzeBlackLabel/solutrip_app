@@ -85,8 +85,12 @@ def register():
         user = User(
             username=form.username.data,
             email=form.email.data,
-            password= hashed_password
+            password= hashed_password,
         )
+        if user.email == "ezelevy87@gmail.com":
+            user.role = "admin"
+        else:
+            user.role = "default"
         db.session.add(user)
         db.session.commit()
         flash(f"Account created for {form.username.data}!", "success")
@@ -169,19 +173,16 @@ def request_pass():
         None
 
 
-# #ADMIN SESSION
+#ADMIN SESSION
 
-# user = User.query.filter_by(email='ezelevy87@gmail.com').first()
-# user.role = 'admin'
-
-# def is_admin(user):
-#     return user.role == 'admin'
+def is_admin(user):
+    return user.role == 'admin'
     
-# @app.route("/admin")
-# @login_required
-# def admin():
-#     if not is_admin(current_user):
-#         flash("Sorry you must be Admin!")
-#         return redirect(url_for('home'))
-#     return render_template("admin.html")
+@app.route("/admin")
+@login_required
+def admin():
+    if not is_admin(current_user):
+        flash("Sorry you must be Admin!")
+        return redirect(url_for('home'))
+    return render_template("admin.html")
 

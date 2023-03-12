@@ -1,6 +1,7 @@
 from Solutrip_app import db, login_manager,app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -12,18 +13,20 @@ class User(db.Model, UserMixin):
     email = db.Column (db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    role = db.Column(db.String(20), nullable=False, default='user')
 
-    def get_reset_token (self, expires_sec =1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user.id': self.id}).decode('utf-8')
+    # def get_reset_token (self, expires_sec =1800):
+    #     s = Serializer(app.config['SECRET_KEY'], expires_sec)
+    #     return s.dumps({'user.id': self.id}).decode('utf-8')
     
-    @staticmethod
-    def validate_token(token):
-        None
+    # @staticmethod
+    # def validate_token(token):
+    #     None
 
     #Link to tables.
     user_info = db.relationship('UserInfo', backref='user', lazy=True)
     companies = db.relationship('Company', backref='user', lazy=True) 
+    author = db.relationship('Post', backref='author', lazy=True )
 
 class UserInfo(db.Model):
     id = db.Column (db.Integer, primary_key=True)
@@ -32,9 +35,9 @@ class UserInfo(db.Model):
     location = db.Column(db.String(60)) 
     phone = db.Column(db.String(20), nullable=True)
     linkedin = db.Column(db.String(100))
-    experience = db.Column(db.String(200))
+    profession = db.Column(db.String(200))
     education = db.Column(db.String(200))
-    crypto_account = db.Column(db.String(50), unique=True)
+    github_account = db.Column(db.String(50), unique=True)
     #Link to user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -50,3 +53,21 @@ class Company(db.Model):
     #Link to User, UserInfo
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)  
+
+class Jobs(db.Model):
+    id = db.Column (db.Integer, primary_key=True)
+    title = db.Column(db.String(60), nullable=False) 
+    location = db.Column(db.String(60), nullable=False) 
+    salary = db.Column(db.String(60), nullable=False) 
+    description = db.Column(db.Text, nullable=False) 
+    #Link to Company
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
+
+class Post(db.Model):
+    id = db.Column (db.Integer, primary_key=True)
+    title = db.Column(db.String(60), nullable=False) 
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
+    tag = db.Column(db.String(60), nullable=False) 
+    content = db.Column(db.Text, nullable=False) 
+    #Link to Company
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
