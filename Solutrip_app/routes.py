@@ -2,7 +2,7 @@ import os
 from Solutrip_app import app,db
 from flask import render_template, url_for, flash, redirect, request
 from Solutrip_app.models import User, UserInfo, Company
-from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm
+from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm,CompanyForm,JobForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -198,3 +198,26 @@ def admin_post():
         return redirect(url_for('admin'))
     return render_template("admin_post.html", title='Admin Post', form=form)
 
+@app.route("/admin/company", methods=['GET', 'POST'])
+@login_required
+def admin_company():
+    if not is_admin(current_user):
+        flash("Sorry, you must be an admin to access this page.","danger")
+        return redirect(url_for('home'))
+    form = CompanyForm()
+    if form.validate_on_submit():
+        flash("Company created successfully!", "success")
+        return redirect(url_for('admin'))
+    return render_template("admin_company.html", title='Admin Company', form=form)
+
+@app.route("/admin/job", methods=['GET', 'POST'])
+@login_required
+def admin_job():
+    if not is_admin(current_user):
+        flash("Sorry, you must be an admin to access this page.","danger")
+        return redirect(url_for('home'))
+    form = JobForm()
+    if form.validate_on_submit():
+        flash("Company created successfully!", "success")
+        return redirect(url_for('admin'))
+    return render_template("admin_job.html", title='Admin Job', form=form)

@@ -45,7 +45,7 @@ class Company(db.Model):
     id = db.Column (db.Integer, primary_key=True)
     companyname = db.Column (db.String(80), unique=True, nullable=False) 
     email = db.Column (db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    password = db.Column(db.String(60), nullable=True)
     location = db.Column(db.String(60), nullable=False)
     industry = db.Column(db.String(60), nullable=False) 
     phone = db.Column(db.String(60), unique=True, nullable=False)

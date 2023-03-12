@@ -66,3 +66,19 @@ class PostForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Confirm', render_kw={"class": " btn btn-primary"})
 
+class CompanyForm(FlaskForm):
+    companyname = StringField('Company Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()]) 
+    location = StringField('Location', validators=[DataRequired()])
+    industry = SelectField('Industry', choices=[('software_development', 'Software Development'), ('network_and_system_administration', 'Network and System Administration'), ('cyber_security', 'Cyber Security'), ('cloud_computing', 'Cloud Computing'), ('mobile_app_development', 'Mobile App Development'), ('data', 'Data'), ('web_development_and_design', 'Web Development and Design'), ('digital_marketing', 'Digital Marketing'), ('game_development', 'Game Development'), ('artificial_intelligence', 'Artificial Intelligence'), ('customer_service', 'Customer Service') ], validators=[DataRequired()], render_kw={"class": "form-control"})
+    phone = StringField('Phone', validators=[DataRequired()])
+    website = StringField('Website', validators=[DataRequired()])
+    submit = SubmitField('Confirm')
+
+class JobForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    salary = StringField('Salary', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    company_id = StringField('Company ID', validators=[DataRequired()])
+    submit = SubmitField('Confirm')
