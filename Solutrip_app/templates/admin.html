@@ -1,9 +1,19 @@
 <!-- Adding a Layout template  -->
 {% extends 'layout.html' %}
-{% block content %} 
-    <!-- Call to Action Section -->
-    <section id="cta" style="min-height: calc(80vh - 50px); margin-top: 20px;">
-        <h2>Hello ADMIN</h2>
-    </section>
-    
+{% block content %}
+        <h2 style="margin-top: 60px; text-align: center; font-size: 52px;">Admin Dashboard</h2>
+        <div class="container" style="text-align: center; margin-top: 150px;">
+            <div class="row">
+              <div class="col-md-4">
+                <a href="{{ url_for('admin_post') }}" class="btn btn-primary btn-block btn-custom mb-3">Blog</a>
+              </div>
+              <div class="col-md-4">
+                <a href="{{ url_for('candidates') }}" class="btn btn-primary btn-block btn-custom mb-3">Jobs</a>
+              </div>
+              <div class="col-md-4">
+                <a href="{{ url_for('employers') }}" class="btn btn-primary btn-block btn-custom mb-3">Company</a>
+              </div>
+            </div>
+          </div>
+        
 {% endblock content %}
