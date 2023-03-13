@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from Solutrip_app.models import User, UserInfo
+from Solutrip_app.models import User, UserInfo, Company
 
 class RegistrationForm(FlaskForm):
     # To validate that user write some data and user name has some specific lenght.
@@ -63,14 +63,14 @@ class RequestPassForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     tag = SelectField('Tag', choices=[('technology', 'Technology'), ('science', 'Science'), ('education', 'Education'), ('jobs', 'Jobs')], validators=[DataRequired()], render_kw={"class": "form-control"})
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Confirm', render_kw={"class": " btn btn-primary"})
+    content = TextAreaField('Content', validators=[DataRequired()], render_kw={"rows": 10, "style": "height: 300px; width: 100%;"})
+    submit = SubmitField('Post', render_kw={"class": " btn btn-primary"})
 
 class CompanyForm(FlaskForm):
     companyname = StringField('Company Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()]) 
     location = StringField('Location', validators=[DataRequired()])
-    industry = SelectField('Industry', choices=[('software_development', 'Software Development'), ('network_and_system_administration', 'Network and System Administration'), ('cyber_security', 'Cyber Security'), ('cloud_computing', 'Cloud Computing'), ('mobile_app_development', 'Mobile App Development'), ('data', 'Data'), ('web_development_and_design', 'Web Development and Design'), ('digital_marketing', 'Digital Marketing'), ('game_development', 'Game Development'), ('artificial_intelligence', 'Artificial Intelligence'), ('customer_service', 'Customer Service') ], validators=[DataRequired()], render_kw={"class": "form-control"})
+    industry = SelectField('Industry', choices=[('software_development', 'Software Development'), ('network_and_system_administration', 'Network and System Administration'), ('cyber_security', 'Cyber Security'), ('cloud_computing', 'Cloud Computing'), ('mobile_app_development', 'Mobile App Development'), ('recruitment', 'Recruitment'), ('data', 'Data'), ('web_development_and_design', 'Web Development and Design'), ('digital_marketing', 'Digital Marketing'), ('game_development', 'Game Development'), ('artificial_intelligence', 'Artificial Intelligence'), ('customer_service', 'Customer Service') ], validators=[DataRequired()], render_kw={"class": "form-control"})
     phone = StringField('Phone', validators=[DataRequired()])
     website = StringField('Website', validators=[DataRequired()])
     submit = SubmitField('Confirm')
@@ -79,6 +79,12 @@ class JobForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
     salary = StringField('Salary', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
-    company_id = StringField('Company ID', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()], render_kw={"rows": 5, "style": "height: 120px; width: 100%;"})
+    requirements = TextAreaField('Requirements', validators=[DataRequired()], render_kw={"rows": 8, "style": "height: 150px; width: 100%;"})
+    qualifications = TextAreaField('Qualifications', validators=[DataRequired()], render_kw={"rows": 8, "style": "height: 150px; width: 100%;"})
+    company_id =SelectField('Company', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Confirm')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.company_id.choices = [(c.id, c.companyname) for c in Company.query.all()]

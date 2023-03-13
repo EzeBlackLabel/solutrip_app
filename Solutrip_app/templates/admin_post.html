@@ -1,15 +1,15 @@
 <!-- Adding a Layout template  -->
 {% extends 'layout.html' %}
-{% block content %} 
+{% block content %}
     <h2 style="margin-top: 20px; text-align: center;">Post Dashboard</h2>
     </section>
-    <div class="content-section">
+    <div class="content-section" style="margin-bottom: 80px;">
         <form method="POST" action="">
             <!-- CSRF Token Validation -->
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-3 mt-3">Create New Post</legend>
-                <div class="form-group mb-2">
+                <div class="form-group mb-2" style="font-weight: bolder;">
                     {{ form.title.label(class="form-control-label") }}
                     {% if form.title.errors %}
                         {{ form.title(class="form-control form-control-lg flex-column is-invalid") }}
@@ -22,7 +22,7 @@
                         {{ form.title(class="form-control form-control-lg flex-column") }}    
                     {% endif %}
                 </div>
-                <div class="form-group mb-2">
+                <div class="form-group mb-2" style="font-weight: bolder;">
                     {{ form.tag.label(class="form-control-label") }}
                     {% if form.tag.errors %}
                         {{ form.tag(class="form-control form-control-lg flex-column is-invalid") }}
@@ -35,7 +35,7 @@
                         {{ form.tag(class="form-control form-control-lg flex-column") }}    
                     {% endif %}
                 </div>
-                <div class="form-group mb-2">
+                <div class="form-group mb-2" style="font-weight: bolder;">
                     {{ form.content.label(class="form-control-label") }}
                     {% if form.content.errors %}
                         {{ form.content(class="form-control form-control-lg flex-column is-invalid") }}
@@ -49,10 +49,11 @@
                     {% endif %}
                 </div>
                 <!-- Button with top margin -->
-                <div class="form-group mb-2">
-                    {{ form.submit(class="btn btn-outline-info mt-3") }}
+                <div class="form-group mb-2" style="margin-bottom: 40px; padding-bottom:40px;">
+                    {{ form.submit(class="btn btn-outline-info") }}
                 </div>        
             </fieldset>
-        </div>
-    
+        </form>    
+    </div>    
+    </section>    
 {% endblock content %}

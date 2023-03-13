@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -25,7 +26,6 @@ class User(db.Model, UserMixin):
 
     #Link to tables.
     user_info = db.relationship('UserInfo', backref='user', lazy=True)
-    companies = db.relationship('Company', backref='user', lazy=True) 
     author = db.relationship('Post', backref='author', lazy=True )
 
 class UserInfo(db.Model):
@@ -45,14 +45,10 @@ class Company(db.Model):
     id = db.Column (db.Integer, primary_key=True)
     companyname = db.Column (db.String(80), unique=True, nullable=False) 
     email = db.Column (db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=True)
     location = db.Column(db.String(60), nullable=False)
     industry = db.Column(db.String(60), nullable=False) 
     phone = db.Column(db.String(60), unique=True, nullable=False)
     website = db.Column(db.String(100), nullable=False)
-    #Link to User, UserInfo
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)  
 
 class Jobs(db.Model):
     id = db.Column (db.Integer, primary_key=True)
@@ -60,6 +56,8 @@ class Jobs(db.Model):
     location = db.Column(db.String(60), nullable=False) 
     salary = db.Column(db.String(60), nullable=False) 
     description = db.Column(db.Text, nullable=False) 
+    requirements= db.Column(db.Text, nullable=False) 
+    qualifications= db.Column(db.Text, nullable=False) 
     #Link to Company
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
 
