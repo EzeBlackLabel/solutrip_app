@@ -3,12 +3,13 @@
 {% block content %}
     <div class="blog">
         <h2 class="blog-title mt-5">Solutrip Talent Blog</h2>
-        {% for post in posts[1:3] %}
+        {% for post in posts %}
             <div class="blog-post mt-5">
                 <h3 class="post-title">{{ post.title }}</h3>
+                <!-- <img src="{{ url_for('static', filename='blog1.jpg') }}" alt="My image" class="img-fluid rounded"> -->
                 <div class="post-info">
-                    <span class="post-author">By {{ post.author }}</span>
-                    <span class="post-date">{{ post.date_posted }}</span>
+                    <span class="post-author">By {{ post.author.username }}</span>
+                    <span class="post-date">{{ post.date_posted.strftime('%Y-%m-%d') }}</span>
                 </div>
                 <div class="post-content">{{ post.content }}</div>
             </div>

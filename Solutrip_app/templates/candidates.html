@@ -1,46 +1,37 @@
-<!-- Adding a Layout template  -->
 {% extends 'layout.html' %}
+
 {% block content %} 
     <section id="carousel">
         <h2> Open Positions</h2>
         <div id="slides">
-        <a href="{{ url_for('static', filename='1.jpg') }}">
-            <img src="{{ url_for('static', filename='1.jpg') }}" alt="Job description 1">
-        </a>
-        <a href="{{ url_for('static', filename='2.jpg') }}">
-            <img src="{{ url_for('static', filename='2.jpg') }}" alt="Job description 2">
-        </a>
-        <a href="{{ url_for('static', filename='3.jpg') }}">
-            <img src="{{ url_for('static', filename='3.jpg') }}" alt="Job description 3">
-        </a>
+            <a href="{{ url_for('static', filename='1.jpg') }}">
+                <img src="{{ url_for('static', filename='1.jpg') }}" alt="Job description 1">
+            </a>
+            <a href="{{ url_for('static', filename='2.jpg') }}">
+                <img src="{{ url_for('static', filename='2.jpg') }}" alt="Job description 2">
+            </a>
+            <a href="{{ url_for('static', filename='3.jpg') }}">
+                <img src="{{ url_for('static', filename='3.jpg') }}" alt="Job description 3">
+            </a>
         </div>
         <div class="body-text" style="text-align: left;">
             <h2> Apply now </h2>
-            {% for job in jobs %}  
-                <div class="row border-bottom" style="margin-top: 4px;">
-                    <div class="col-10">
-                        <h4 style="color: rgb(120,120,120); margin-bottom: 2px">{{ job.Title }}</h4>
-                        <div><b>Location: </b>{{ job.Location }}</div>
-                        <div style="margin-bottom: 16px;"><b>Salary: </b>{{ job.Salary }}</div>
+            {% if jobs %}
+                {% for job in jobs %}  
+                    <div class="row border-bottom" style="margin-top: 4px;">
+                        <div class="col-10">
+                            <h4 style="color: rgb(120,120,120); margin-bottom: 2px">{{ job.title }}</h4>
+                            <div><b>Location: </b>{{ job.location }}</div>
+                            <div style="margin-bottom: 16px;"><b>Salary: </b>{{ job.salary }}</div>
+                        </div>
+                        <div class="col-2">
+                            <a href="/login" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <a href="/login" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
-                    </div>
-                </div>
-            {% endfor %}  
+                {% endfor %}  
+            {% else %}
+                <p>No jobs available</p>
+            {% endif %}
         </div>
-        
-
-        <!-- <div class="button-container">
-        <a href="#" id="prev">Prev</a>
-        <a href="#" id="next">Next</a>
-        </div> -->
     </section>
-  <!-- Search Section -->
-    <!-- <section id="search">
-        <input type="text" placeholder="Search for Remote Friendly Roles">
-        <button>Search</button>
-    </section> -->
-
-
 {% endblock %}

@@ -14,23 +14,8 @@ def home():
     
 @app.route("/candidates")
 def candidates(): 
-    JOBS = [{ "Id": 1,
-              "Title": "Data Analyst JR",
-              "Location": "Europe",
-              "Salary": "$900 USD" 
-            },
-            { "Id": 2,
-              "Title": "Full Stack Developer",
-              "Location": "Europe",
-              "Salary": "$2,800 USD" 
-            },
-            { "Id": 3,
-              "Title": "Cloud Architect",
-              "Location": "USA",
-              "Salary": "$2,000 USD" 
-            }
-    ]
-    return render_template("candidates.html", jobs = JOBS)
+    jobs = Jobs.query.all()
+    return render_template("candidates.html", jobs = jobs, title="Jobs")
 
 @app.route("/employers")
 def employers():
@@ -38,34 +23,7 @@ def employers():
 
 @app.route("/blog")
 def blog():
-    posts = [ {
-        "author": "joe.solutrip@gmail.com",
-        "title": "Why work remote in 2023?",
-        "content": """Remote work is a great option in 2023 for a variety of reasons,
-         including flexibility, cost savings, a larger talent pool, 
-         and environmental benefits. As technology continues to advance and remote work becomes 
-         more common, we can expect to see even more companies and employees embracing this way 
-         of working. Get the maximum benefits from this new way of working! """,
-        "date_posted": "1 of March 2023"  
-
-        },
-        { 
-        "author": "joe.solutrip@gmail.com",
-        "title": "Tips to pass your English interview",
-        "content": """Speak clearly and confidently: Speak slowly and clearly so that the interviewer can
-        understand you. Take your time when answering questions and try to speak confidently. If you're
-        not sure about something, it's okay to take a moment to think before you answer. Be prepared to talk about 
-        yourself: In many interviews, the interviewer will ask you to talk about yourself. Prepare a short introduction that highlights your skills, experience, and why you're interested in the job.""",
-        "date_posted": "10 of March 2023"  
-        },
-        { 
-        "author": "eze.solutrip@gmail.com",
-        "title": "How to make a Github Portfolio",
-        "content": """Creating a GitHub portfolio is a great way to showcase your programming skills and projects to potential employers and collaborators.
-        GitHub allows you to customize your repository's appearance by adding a profile picture, a cover photo, and a description. You can also add badges and labels to your projects to make them more appealing""",
-        "date_posted": "7 of March 2023"  
-        }
-    ]
+    posts = Post.query.all()
     return render_template("blog.html", posts = posts, title = "Blog")
 
 @app.route("/about")
@@ -237,6 +195,17 @@ def admin_job():
         return redirect(url_for('home'))
     form = JobForm()
     if form.validate_on_submit():
-        flash("Company created successfully!", "success")
+        job = Jobs(
+            title = form.title.data,
+            location = form.location.data,
+            salary = form.salary.data,
+            description = form.description.data,
+            requirements = form.requirements.data,
+            qualifications = form.qualifications.data,
+            company_id = form.company_id.data,
+        )
+        db.session.add(job)
+        db.session.commit()
+        flash("Job created successfully!", "success")
         return redirect(url_for('admin'))
     return render_template("admin_job.html", title='Admin Job', form=form)
