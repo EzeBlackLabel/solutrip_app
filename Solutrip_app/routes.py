@@ -164,6 +164,12 @@ def admin_post():
         return redirect(url_for('admin'))
     return render_template("admin_post.html", title='Admin Post', form=form)
 
+@app.route("/admin/post/<int:post_id>")
+@login_required
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template("post.html", title= post.title, post = post)
+
 @app.route("/admin/company", methods=['GET', 'POST'])
 @login_required
 def admin_company():
