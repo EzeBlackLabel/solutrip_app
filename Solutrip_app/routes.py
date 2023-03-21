@@ -45,7 +45,8 @@ def register():
             email=form.email.data,
             password= hashed_password,
         )
-        if user.email == "ezelevy87@gmail.com":
+        admin_mails = ["ezelevy87@gmail.com", "joe.solutrip.gmail.com", "admin@solutrip.com"]
+        if user.email in admin_mails:
             user.role = "admin"
         else:
             user.role = "default"
