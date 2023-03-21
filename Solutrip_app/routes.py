@@ -1,6 +1,6 @@
 import os
 from Solutrip_app import app,db
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from Solutrip_app.models import User, UserInfo, Company, Post, Jobs
 from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm,CompanyForm,JobForm
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -163,13 +163,36 @@ def admin_post():
         db.session.commit()
         flash("Post created successfully!", "success")
         return redirect(url_for('admin'))
-    return render_template("admin_post.html", title='Admin Post', form=form)
+    return render_template("admin_post.html", title='Admin Post', form=form,
+                            legend = "New Post")
 
 @app.route("/admin/post/<int:post_id>")
 @login_required
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post.html", title= post.title, post = post)
+
+@app.route("/admin/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.tag = form.tag.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.tag.data = post.tag
+        form.content.data = post.content
+    return render_template("admin_post.html", title="Edit Post", form=form, post=post, legend= "Edit Post")
+
+
 
 @app.route("/admin/company", methods=['GET', 'POST'])
 @login_required

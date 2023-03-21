@@ -11,6 +11,11 @@
             <span class="post-author mt-1">By {{ post.author.username }}</span>
             <span class="post-date mt-1">{{ post.date_posted.strftime('%A, %B %d, %Y') }}</span>
         </div>
-        <div class="post-content mt-5">{{ post.content }}</div>
+        <div class="post-content mt-3">{{ post.content }}</div>
+        {%if post.author == current_user %}
+            <div>
+                <a class="btn btn-primary mt-5" href="{{ url_for('update_post', post_id=post.id) }}" >Edit Post</a>
+            </div>
+        {%endif%}
     </div>
 {% endblock content %}

@@ -8,7 +8,7 @@
             <!-- CSRF Token Validation -->
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-3 mt-3">Create New Post</legend>
+                <legend class="border-bottom mb-3 mt-3">{{legend}}</legend>
                 <div class="form-group mb-2" style="font-weight: bolder;">
                     {{ form.title.label(class="form-control-label") }}
                     {% if form.title.errors %}
