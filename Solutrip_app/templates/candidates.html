@@ -20,12 +20,12 @@
                 {% for job in jobs %}  
                     <div class="row border-bottom" style="margin-top: 4px;">
                         <div class="col-10">
-                            <h4 style="color: rgb(120,120,120); margin-bottom: 2px">{{ job.title }}</h4>
+                            <h4 style="color: rgb(120,120,120); margin-top: 8px; margin-bottom: 2px">{{ job.title }}</h4>
                             <div><b>Location: </b>{{ job.location }}</div>
                             <div style="margin-bottom: 16px;"><b>Salary: </b>{{ job.salary }}</div>
                         </div>
                         <div class="col-2">
-                            <a href="/login" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
+                            <a href="{{ url_for('job', job_id=job.id) }}"" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
                         </div>
                     </div>
                 {% endfor %}  

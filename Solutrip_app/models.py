@@ -38,8 +38,12 @@ class UserInfo(db.Model):
     profession = db.Column(db.String(200))
     education = db.Column(db.String(200))
     github_account = db.Column(db.String(50), unique=True)
+    cv = db.Column(db.LargeBinary, nullable=True) 
     #Link to user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    #Link to the Job Application
+    job_applications = db.relationship('JobApplication', backref='user', lazy=True)
+
 
 class Company(db.Model):
     id = db.Column (db.Integer, primary_key=True)
@@ -57,9 +61,11 @@ class Jobs(db.Model):
     salary = db.Column(db.String(60), nullable=False) 
     description = db.Column(db.Text, nullable=False) 
     requirements= db.Column(db.Text, nullable=False) 
-    qualifications= db.Column(db.Text, nullable=False) 
+    qualifications= db.Column(db.Text, nullable=False)
     #Link to Company
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
+    #Link to Job Application
+    job_applications = db.relationship('JobApplication', backref='job', lazy=True)
 
 class Post(db.Model):
     id = db.Column (db.Integer, primary_key=True)
@@ -69,3 +75,13 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False) 
     #Link to Company
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class JobApplication(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_applied = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+    # Link to Jobs table
+    job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
+    # Link to UserInfo table
+    user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)
+

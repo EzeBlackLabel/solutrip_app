@@ -1,7 +1,7 @@
 import os
 from Solutrip_app import app,db
 from flask import render_template, url_for, flash, redirect, request, abort
-from Solutrip_app.models import User, UserInfo, Company, Post, Jobs
+from Solutrip_app.models import User, UserInfo, Company, Post, Jobs, JobApplication
 from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm,CompanyForm,JobForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -103,11 +103,9 @@ def account():
         userinfo.profession = form.profession.data
         userinfo.education = form.education.data
         userinfo.github_account = form.github_account.data
-
         if form.cv.data:
             cv_file = save_cv(form.cv.data)
             current_user.cv = cv_file
-
         db.session.commit()
         flash('Your account has been updated', 'success')
         return redirect(url_for('account'))
@@ -122,6 +120,7 @@ def account():
             form.profession.data = userinfo.profession
             form.education.data = userinfo.education
             form.github_account.data = userinfo.github_account
+            form.cv.data = userinfo.cv
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("account.html", title="Account", image_file=image_file, form=form)
 
@@ -250,3 +249,29 @@ def admin_job():
         flash("Job created successfully!", "success")
         return redirect(url_for('admin'))
     return render_template("admin_job.html", title='Admin Job', form=form)
+
+@app.route("/admin/job/<int:job_id>")
+@login_required
+def job(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
+    context = {'job': job, 'userinfo': userinfo}
+    return render_template("job.html", title= job.title, **context)
+
+@app.route('/admin/job/<int:job_id>', methods=['GET', 'POST'])
+def apply(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    if request.method == 'POST':
+        # Get the user information
+        user_info = UserInfo.query.filter_by(user_id=current_user.id).first()
+        # Create a new job application
+        job_application = JobApplication(status='pending')
+        job_application.job = job
+        job_application.user = user_info
+        # Add the job application to the database
+        db.session.add(job_application)
+        db.session.commit()
+        # Redirect to the job listing page
+        return redirect(url_for('candidates'))
+    # Render the job application form
+    return render_template('job.html', job=job)

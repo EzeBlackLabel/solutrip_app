@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="job">
+        <h2 class="job-title mt-5" style="padding-bottom: 25px;">Solutrip Jobs</h2>
+        <div class="job-post mt-5" style="display: flex; align-items: center;">
+            <h3 class="job-title" style="margin-left: 10px; font-size: 50px;"> {{ job.title }}</h3>
+            <img src="{{ url_for('static', filename='solu.png') }}" alt="My image" class="img-fluid rounded" style="height: 160px; margin-left: auto;">
+        </div>
+        <div class="job-info">
+            <span class="job-location mt-1"> LOCATION: {{ job.location }}</span>
+            <span class="job-salary mt-1"> SALARY: {{ job.salary }}</span>
+            <span class="job-description mt-1"> DESCRIPTION: {{ job.description }}</span>
+            <span class="job-requirements mt-1"> RESPONSIBILITIES: {{ job.requirements }}</span>
+            <span class="job-qualifications mt-1"> QUALIFICATIONS: {{ job.qualifications }}</span>
+        </div>
+        {%if admin == current_user %}
+            <div>
+                <!-- Update -->
+                <a class="btn btn-primary mt-3" href="{{ url_for('update_job', job_id=job.id) }}" >Edit Post</a>
+                <!-- Delete -->
+                <button type ="button" class="btn btn-danger mt-5 mr-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            </div>
+        {%endif%}
+
+        <h5 class="job-end mt-4" > <b> If you are interested in this exciting opportunity, please submit your application. <br> We look forward to hearing from you! </b></h5>
+        {% if not userinfo.name and not userinfo.surname and not userinfo.location and not userinfo.phone and not userinfo.linkedin and not userinfo.profession and not userinfo.education and not userinfo.github_account and not current_user.cv %}
+            <h5 class="job-end mt-4" style="color:coral " >* In order to process your application correctly, your personal information and resume must be completed in your profile. 
+                <br> <a href="{{url_for('account')}}"> Please update here!</a> </h5>
+            <a href=""" type="button" class="btn btn-outline-primary btn-lg mt-4 float-right disabled">Apply</a>
+        {% else %}
+            <form action="{{ url_for('apply', job_id=job.id) }}" method="POST">
+                <button type="submit" class="btn btn-outline-primary btn-lg mt-4 float-right">Apply</button>
+            </form>
+        {% endif %}
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete job?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>            
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+{% endblock content %}

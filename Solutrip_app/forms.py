@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from Solutrip_app.models import User, UserInfo, Company
@@ -47,7 +47,7 @@ class UpdateForm(FlaskForm):
     education = StringField('Education', validators=[DataRequired()])
     linkedin = StringField('Linkedin', validators=[DataRequired()])
     github_account = StringField('Github account', validators=[DataRequired()], description='Enter your cryptocurrency account address. If you do not have, write *')
-    cv = FileField('Upload your CV', validators=[FileAllowed(['pdf', 'doc', 'docx'])])
+    cv = FileField('Upload your CV', validators=[FileRequired(), FileAllowed(['pdf'], 'PDFs only!')])
     submit = SubmitField('Update')
 
 class RequestPassForm(FlaskForm):
