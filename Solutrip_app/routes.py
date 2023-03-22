@@ -15,8 +15,9 @@ def home():
 @app.route("/candidates")
 def candidates(): 
     jobs = Jobs.query.all()
+    # job = Jobs.query.get_or_404(job_id)
     user = current_user
-    return render_template("candidates.html", jobs=jobs, title="Jobs", user=user)
+    return render_template("candidates.html", jobs=jobs, job=job, title="Jobs", user=user)
 
 
 @app.route("/employers")
@@ -300,12 +301,16 @@ def update_job(job_id):
 def delete_job(job_id):
     job = Jobs.query.get_or_404(job_id)
     admin = is_admin(current_user)
+    userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
     if not admin:
         abort(403)
-    db.session.delete(job)
-    db.session.commit()
-    flash('Your job has been deleted!', 'success')
-    return redirect(url_for('candidates', job_id=job.id))
+    if request.form['_method'] == 'DELETE':
+        db.session.delete(job)
+        db.session.commit()
+        flash('Your job has been deleted!', 'success')
+        return redirect(url_for('candidates', job_id=job.id))
+    return render_template('job.html', job=job, userinfo=userinfo)
+
 
 #ADMIN COMPANY SESSION
 @app.route("/admin/company", methods=['GET', 'POST'])

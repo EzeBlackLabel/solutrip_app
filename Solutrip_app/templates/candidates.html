@@ -26,16 +26,36 @@
                         </div>
                         <div class="col-2">
                             {% if user.role == 'admin' %}
-                                <a href="{{ url_for('update_job', job_id=job.id) }}" type="button" class="btn btn-outline-primary mt-4 float-right">Edit</a>
-                                <a href="{{ url_for('delete_job', job_id=job.id) }}" type="button" class="btn btn-outline-danger mt-4 float-right">Delete</a>
+                            <a href="{{ url_for('update_job', job_id=job.id) }}" type="button" class="btn btn-outline-primary mt-4 float-right">Edit</a>
+                            <button type="button" class="btn btn-outline-danger mt-4 float-right" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ job.id }}">Delete</button>
+                            <div class="modal fade" id="deleteModal-{{ job.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-{{ job.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel-{{ job.id }}">Confirm Delete</h5>
+                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete "{{ job.title }}"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="{{ url_for('delete_job', job_id=job.id) }}" style="display: inline;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             {% else %}
                                 <a href="{{ url_for('apply', job_id=job.id) }}"" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
                             {% endif %}
                         </div>
                     </div>
                 {% endfor %}  
-            {% else %}
-                <p>No jobs available</p>
             {% endif %}
         </div>
     </section>
