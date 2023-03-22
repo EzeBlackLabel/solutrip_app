@@ -15,7 +15,9 @@ def home():
 @app.route("/candidates")
 def candidates(): 
     jobs = Jobs.query.all()
-    return render_template("candidates.html", jobs = jobs, title="Jobs")
+    user = current_user
+    return render_template("candidates.html", jobs=jobs, title="Jobs", user=user)
+
 
 @app.route("/employers")
 def employers():
@@ -132,7 +134,6 @@ def request_pass():
 
 
 #ADMIN SESSION
-
 def is_admin(user):
     return user.role == 'admin'
     
@@ -144,6 +145,7 @@ def admin():
         return redirect(url_for('home'))
     return render_template("admin.html", Title = 'Admin')
 
+#ADMIN POST SESSION
 @app.route("/admin/post", methods=['GET', 'POST'])
 @login_required
 def admin_post():
@@ -202,8 +204,110 @@ def delete_post(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('blog'))
     
+#ADMIN JOBS SESSION
+@app.route("/admin/job", methods=['GET', 'POST'])
+@login_required
+def admin_job():
+    if not is_admin(current_user):
+        flash("Sorry, you must be an admin to access this page.","danger")
+        return redirect(url_for('home'))
+    form = JobForm()
+    if form.validate_on_submit():
+        job = Jobs(
+            title=form.title.data,
+            location=form.location.data,
+            salary=form.salary.data,
+            description=form.description.data,
+            requirements=form.requirements.data,
+            qualifications=form.qualifications.data,
+            company_id=form.company_id.data,
+        )
+        db.session.add(job)
+        db.session.commit()
+        flash("Job created successfully!", "success")
+        return redirect(url_for('admin_job'))
+    return render_template("admin_job.html", title='Admin Job', form=form)
 
+@app.route("/admin/job/<int:job_id>")
+@login_required
+def job(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
+    context = {'job': job, 'userinfo': userinfo}
+    return render_template("job.html", title= job.title, **context)
 
+def is_admin(user):
+    if user.is_authenticated and user.role == "admin":
+        return True
+    else:
+        return False    
+
+@app.route('/admin/job/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def apply(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    if request.method == 'POST':
+        # Get the user information
+        user_info = UserInfo.query.filter_by(user_id=current_user.id).first()
+        # Create a new job application
+        job_application = JobApplication(status='pending')
+        job_application.job = job
+        job_application.user = user_info
+        # Add the job application to the database
+        db.session.add(job_application)
+        db.session.commit()
+        # Redirect to the job listing page
+        return redirect(url_for('candidates'))
+    # Check if the current user is an admin
+    admin = is_admin(current_user)
+    # Get the user information if the user is not an admin
+    userinfo = None
+    if not admin:
+        userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
+    # Render the job application form
+    return render_template('job.html', job=job, admin=admin, userinfo=userinfo)
+
+@app.route("/admin/job/<int:job_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_job(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
+    admin = is_admin(current_user)
+    if not admin:
+        abort(403)
+    form = JobForm()
+    if form.validate_on_submit():
+        job.title = form.title.data
+        job.location = form.location.data
+        job.salary = form.salary.data
+        job.description = form.description.data
+        job.requirements = form.requirements.data
+        job.qualifications = form.qualifications.data
+        db.session.commit()
+        flash('Your job has been updated!', 'success')
+        return redirect(url_for('job', job_id=job.id))
+    elif request.method == 'GET':
+        form.title.data = job.title
+        form.location.data = job.location
+        form.salary.data = job.salary
+        form.description.data = job.description
+        form.requirements.data = job.requirements
+        form.qualifications.data = job.qualifications
+    return render_template("admin_job.html", title="Edit Job", form=form, job=job, userinfo= userinfo, admin=admin, legend= "Edit Job")
+
+@app.route("/admin/job/<int:job_id>/delete", methods=['POST'])
+@login_required
+def delete_job(job_id):
+    job = Jobs.query.get_or_404(job_id)
+    admin = is_admin(current_user)
+    if not admin:
+        abort(403)
+    db.session.delete(job)
+    db.session.commit()
+    flash('Your job has been deleted!', 'success')
+    return redirect(url_for('candidates', job_id=job.id))
+
+#ADMIN COMPANY SESSION
 @app.route("/admin/company", methods=['GET', 'POST'])
 @login_required
 def admin_company():
@@ -226,52 +330,3 @@ def admin_company():
         flash("Company created successfully!", "success")
         return redirect(url_for('admin'))
     return render_template("admin_company.html", title='Admin Company', form=form, companies = companies)
-
-@app.route("/admin/job", methods=['GET', 'POST'])
-@login_required
-def admin_job():
-    if not is_admin(current_user):
-        flash("Sorry, you must be an admin to access this page.","danger")
-        return redirect(url_for('home'))
-    form = JobForm()
-    if form.validate_on_submit():
-        job = Jobs(
-            title = form.title.data,
-            location = form.location.data,
-            salary = form.salary.data,
-            description = form.description.data,
-            requirements = form.requirements.data,
-            qualifications = form.qualifications.data,
-            company_id = form.company_id.data,
-        )
-        db.session.add(job)
-        db.session.commit()
-        flash("Job created successfully!", "success")
-        return redirect(url_for('admin'))
-    return render_template("admin_job.html", title='Admin Job', form=form)
-
-@app.route("/admin/job/<int:job_id>")
-@login_required
-def job(job_id):
-    job = Jobs.query.get_or_404(job_id)
-    userinfo = UserInfo.query.filter_by(user_id=current_user.id).first()
-    context = {'job': job, 'userinfo': userinfo}
-    return render_template("job.html", title= job.title, **context)
-
-@app.route('/admin/job/<int:job_id>', methods=['GET', 'POST'])
-def apply(job_id):
-    job = Jobs.query.get_or_404(job_id)
-    if request.method == 'POST':
-        # Get the user information
-        user_info = UserInfo.query.filter_by(user_id=current_user.id).first()
-        # Create a new job application
-        job_application = JobApplication(status='pending')
-        job_application.job = job
-        job_application.user = user_info
-        # Add the job application to the database
-        db.session.add(job_application)
-        db.session.commit()
-        # Redirect to the job listing page
-        return redirect(url_for('candidates'))
-    # Render the job application form
-    return render_template('job.html', job=job)

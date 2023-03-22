@@ -25,7 +25,12 @@
                             <div style="margin-bottom: 16px;"><b>Salary: </b>{{ job.salary }}</div>
                         </div>
                         <div class="col-2">
-                            <a href="{{ url_for('job', job_id=job.id) }}"" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
+                            {% if user.role == 'admin' %}
+                                <a href="{{ url_for('update_job', job_id=job.id) }}" type="button" class="btn btn-outline-primary mt-4 float-right">Edit</a>
+                                <a href="{{ url_for('delete_job', job_id=job.id) }}" type="button" class="btn btn-outline-danger mt-4 float-right">Delete</a>
+                            {% else %}
+                                <a href="{{ url_for('apply', job_id=job.id) }}"" type="button" class="btn btn-outline-primary mt-4 float-right">Apply</a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}  
