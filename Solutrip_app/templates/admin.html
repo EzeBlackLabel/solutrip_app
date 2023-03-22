@@ -5,13 +5,13 @@
         <div class="container" style="text-align: center; margin-top: 150px;">
             <div class="row">
               <div class="col-md-4">
-                <a href="{{ url_for('admin_post') }}" class="btn btn-primary btn-block btn-custom mb-3">Blog</a>
+                <a href="{{ url_for('blog') }}" class="btn btn-primary btn-block btn-custom mb-3">Blog</a>
               </div>
               <div class="col-md-4">
-                <a href="{{ url_for('admin_job') }}" class="btn btn-primary btn-block btn-custom mb-3">Jobs</a>
+                <a href="{{ url_for('candidates') }}" class="btn btn-primary btn-block btn-custom mb-3">Jobs</a>
               </div>
               <div class="col-md-4">
-                <a href="{{ url_for('admin_company') }}" class="btn btn-primary btn-block btn-custom mb-3">Company</a>
+                <a href="{{ url_for('view_companies') }}" class="btn btn-primary btn-block btn-custom mb-3">Companies</a>
               </div>
             </div>
           </div>
@@ -24,8 +24,6 @@
               </div>
               <div class="col-md-4" style="font-size: 22px ; font-weight: bold; margin-top: 40px; padding-left: 110px;"> 
                 <a href="{{ url_for('admin_company') }}"> <ol> Create Company </ol></a> 
-                <ol>Edit Company</ol>
-                <ol>Delete Company</ol>
               </div>
           </div>
         

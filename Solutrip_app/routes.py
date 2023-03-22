@@ -335,3 +335,51 @@ def admin_company():
         flash("Company created successfully!", "success")
         return redirect(url_for('admin'))
     return render_template("admin_company.html", title='Admin Company', form=form, companies = companies)
+
+@app.route("/admin/companies", methods=['GET'])
+@login_required
+def view_companies():
+    if not is_admin(current_user):
+        flash("Sorry, you must be an admin to access this page.","danger")
+        return redirect(url_for('home')) 
+    companies = Company.query.all()
+    return render_template("companies.html", title="Companies", companies=companies)
+
+@app.route("/admin/company/<int:company_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_company(company_id):
+    company = Company.query.get_or_404(company_id)
+    admin = is_admin(current_user)
+    if not admin:
+        abort(403)
+    form= CompanyForm()    
+    if form.validate_on_submit():
+        company.companyname = form.companyname.data
+        company.email = form.email.data
+        company.location = form.location.data
+        company.industry = form.industry.data
+        company.phone = form.phone.data
+        company.website = form.website.data
+        db.session.commit()
+        flash("Company updated successfully!", "success")
+        return redirect(url_for('view_companies', company_id=company.id))
+    elif request.method == 'GET':
+        form.companyname.data = company.companyname
+        form.email.data = company.email
+        form.location.data = company.location
+        form.industry.data = company.industry
+        form.phone.data = company.phone
+        form.website.data = company.website
+    return render_template("admin_company.html", title='Update Company', form=form, company = company)
+
+@app.route("/admin/company/<int:company_id>/delete", methods=['POST'])
+@login_required
+def delete_company(company_id):
+    company = Company.query.get_or_404(company_id)
+    db.session.delete(company)
+    db.session.commit()
+    flash('The company has been deleted!', 'success')
+    return redirect(url_for('view_companies', company_id = company.id))
+    
+    
+
