@@ -5,6 +5,7 @@ from Solutrip_app.models import User, UserInfo, Company, Post, Jobs, JobApplicat
 from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm,CompanyForm,JobForm
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
+from itertools import groupby
 
 @app.route("/")
 @app.route("/home")
@@ -257,6 +258,7 @@ def apply(job_id):
         # Add the job application to the database
         db.session.add(job_application)
         db.session.commit()
+        flash("Thank you for applying! We will get back to you soon", "success")
         # Redirect to the job listing page
         return redirect(url_for('candidates'))
     # Check if the current user is an admin
@@ -380,6 +382,16 @@ def delete_company(company_id):
     db.session.commit()
     flash('The company has been deleted!', 'success')
     return redirect(url_for('view_companies', company_id = company.id))
-    
-    
 
+@app.route('/admin/applications')
+@login_required
+def admin_appl():
+    job_applications = JobApplication.query.all()
+    job_applications_grouped = [(user_info, list(group)) for user_info, group in groupby(job_applications, lambda app: app.user_info)]
+    user_infos = UserInfo.query.all()
+    return render_template('applications.html', job_applications=job_applications, job_applications_grouped=job_applications_grouped, user_infos=user_infos)
+
+@app.route('/user_info/<int:user_id>')
+def user_info(user_id):
+    user = UserInfo.query.get(user_id)
+    return render_template('user_info.html', user=user)

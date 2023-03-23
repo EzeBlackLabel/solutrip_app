@@ -82,6 +82,8 @@ class JobApplication(db.Model):
     status = db.Column(db.String(20), nullable=False, default='pending')
     # Link to Jobs table
     job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
+    applied_job = db.relationship('Jobs', backref='applications')
     # Link to UserInfo table
     user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)
+    user_info = db.relationship('UserInfo', backref='applications')
 

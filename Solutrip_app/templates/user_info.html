@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" width="128" height="128">
+          <h4 class="card-title">{{ user.name }} {{ user.surname }}</h4>
+          <p class="card-text">{{ user.profession }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Location:</strong> {{ user.location }}</li>
+          <li class="list-group-item"><strong>Phone:</strong> {{ user.phone }}</li>
+          <li class="list-group-item"><strong>LinkedIn:</strong> <a href="{{ user.linkedin }}" target="_blank">{{ user.linkedin }}</a></li>
+          <li class="list-group-item"><strong>Github Account:</strong> <a href="{{ user.github_account }}" target="_blank">{{ user.github_account }}</a></li>
+          <li class="list-group-item"><strong>Education:</strong> {{ user.education }} </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+{% endblock %}
