@@ -393,5 +393,6 @@ def admin_appl():
 
 @app.route('/user_info/<int:user_id>')
 def user_info(user_id):
-    user = UserInfo.query.get(user_id)
-    return render_template('user_info.html', user=user)
+    user_info = UserInfo.query.get(user_id)
+    user= User.query.get(user_id)
+    return render_template('user_info.html', user=user, user_info= user_info)
