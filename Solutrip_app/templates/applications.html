@@ -21,7 +21,7 @@
               <td>{{ job_application.date_applied.strftime('%b %d, %Y') }}</td>
               <td>{{ job_application.status }}</td>
               <td>{{ job_application.job.title }}</td>
-              <td><a href="{{ url_for('user_info', user_id=job_application.user.user.id) }}">{{ job_application.user.name }} {{ job_application.user.surname }}</a></td>
+              <td><a href="{{ url_for('user_info', user_info_id=job_application.user.id) }}">{{ job_application.user.name }} {{ job_application.user.surname }}</a></td>
           </tr>
       {% endfor %}
     </tbody>

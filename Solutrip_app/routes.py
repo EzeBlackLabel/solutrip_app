@@ -391,8 +391,10 @@ def admin_appl():
     user_infos = UserInfo.query.all()
     return render_template('applications.html', job_applications=job_applications, job_applications_grouped=job_applications_grouped, user_infos=user_infos)
 
-@app.route('/user_info/<int:user_id>')
-def user_info(user_id):
-    user_info = UserInfo.query.get(user_id)
-    user= User.query.get(user_id)
+@app.route('/user_info/<int:user_info_id>')
+def user_info(user_info_id):
+    user_info = UserInfo.query.get(user_info_id)
+    if not user_info:
+        abort(404)
+    user = user_info.user
     return render_template('user_info.html', user=user, user_info= user_info)

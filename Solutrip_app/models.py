@@ -37,7 +37,7 @@ class UserInfo(db.Model):
     linkedin = db.Column(db.String(100))
     profession = db.Column(db.String(200))
     education = db.Column(db.String(200))
-    github_account = db.Column(db.String(50), unique=True)
+    github_account = db.Column(db.String(50))
     cv = db.Column(db.LargeBinary, nullable=True) 
     #Link to user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
