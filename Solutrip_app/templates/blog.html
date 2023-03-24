@@ -3,7 +3,7 @@
 {% block content %}
     <div class="blog">
         <h2 class="blog-title mt-5" style="padding-bottom: 30px;">Solutrip Talent Blog</h2>
-        {% for post in posts [::-1] %}
+        {% for post in posts.items %}
             <div class="blog-post mt-5">
                 <h4> <a class="post-title" href="{{ url_for('post', post_id= post.id)}}"> {{ post.title }}</a></h4>
                 <div class="post-info mb-1">
@@ -23,8 +23,25 @@
                         #Solutrip{{ post.tag }}
                         <img src="{{ url_for('static', filename='dinero.png') }}" alt="Technology" width="24" height="24">
                     </div>
+                {% elif post.tag == "science" %}
+                <div class="post-tag" style="color: rgb(173, 183, 230);">
+                    #Solutrip{{ post.tag }} &#x1F52C;
+                </div>
                 {% endif %}
             </div>
         {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center">
+    {% for page_num in posts.iter_pages() %}
+        {% if page_num %}
+            {% if posts.page == page_num %}
+                <a class=" btn btn-primary mx-2 mb-4 float-right" href="{{url_for('blog', page = page_num)}}" style="color: white;"> {{ page_num }}</a>
+            {% else %}
+                <a class=" btn btn-outline-primary mx-2 mb-4" href="{{url_for('blog', page = page_num)}}" style="color: #3f82c3;"> {{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor%}
     </div>
 {% endblock content %}

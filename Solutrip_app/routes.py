@@ -20,14 +20,14 @@ def candidates():
     user = current_user
     return render_template("candidates.html", jobs=jobs, job=job, title="Jobs", user=user)
 
-
 @app.route("/employers")
 def employers():
     return render_template("employers.html", title = "Employers")
 
 @app.route("/blog")
 def blog():
-    posts = Post.query.all()
+    page = request.args.get('page',1,type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page = page, per_page = 4)
     return render_template("blog.html", posts = posts, title = "Blog")
 
 @app.route("/about")
@@ -49,7 +49,7 @@ def register():
             email=form.email.data,
             password= hashed_password,
         )
-        admin_mails = ["ezelevy87@gmail.com", "joe.solutrip.gmail.com", "admin@solutrip.com"]
+        admin_mails = ["ezelevy87@gmail.com", "joe.solutrip@gmail.com", "admin@solutrip.com"]
         if user.email in admin_mails:
             user.role = "admin"
         else:
