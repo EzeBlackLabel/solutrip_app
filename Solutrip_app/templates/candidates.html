@@ -57,6 +57,19 @@
                     </div>
                 {% endfor %}  
             {% endif %}
+            <div class="d-flex justify-content-center" style="padding-top: 40px;">
+                {% for page_num in jobs.iter_pages() %}
+                    {% if page_num %}
+                        {% if jobs.page == page_num %}
+                            <a class=" btn btn-primary mx-2 mb-4 float-right" href="{{url_for('candidates', page = page_num)}}" style="color: white;"> {{ page_num }}</a>
+                        {% else %}
+                            <a class=" btn btn-outline-primary mx-2 mb-4" href="{{url_for('candidates', page = page_num)}}" style="color: #3f82c3;"> {{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor%}
+                </div>
         </div>
     </section>
 {% endblock %}

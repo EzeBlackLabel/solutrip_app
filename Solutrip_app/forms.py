@@ -80,8 +80,8 @@ class JobForm(FlaskForm):
     location = StringField('Location', validators=[DataRequired()])
     salary = StringField('Salary', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()], render_kw={"rows": 5, "style": "height: 120px; width: 100%;"})
+    qualifications = TextAreaField('Responsibilities', validators=[DataRequired()], render_kw={"rows": 8, "style": "height: 150px; width: 100%;"}) 
     requirements = TextAreaField('Requirements', validators=[DataRequired()], render_kw={"rows": 8, "style": "height: 150px; width: 100%;"})
-    qualifications = TextAreaField('Qualifications', validators=[DataRequired()], render_kw={"rows": 8, "style": "height: 150px; width: 100%;"})
     company_id =SelectField('Company', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Confirm')
 

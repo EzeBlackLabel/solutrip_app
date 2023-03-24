@@ -15,10 +15,10 @@ def home():
     
 @app.route("/candidates")
 def candidates(): 
-    jobs = Jobs.query.all()
-    # job = Jobs.query.get_or_404(job_id)
+    page = request.args.get('page',1,type=int)
+    jobs = Jobs.query.paginate(page=page, per_page = 3)
     user = current_user
-    return render_template("candidates.html", jobs=jobs, job=job, title="Jobs", user=user)
+    return render_template("candidates.html", title="Jobs", page = page, jobs=jobs, user=user)
 
 @app.route("/employers")
 def employers():
