@@ -4,9 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-# Always create a secret key for the app.
 app.config['SECRET_KEY'] = 'ffeaeae4d2ba6634d217528a4de4b8a2'
-#Database set up
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///solutrip_site.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)

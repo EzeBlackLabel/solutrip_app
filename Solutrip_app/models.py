@@ -15,14 +15,32 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     role = db.Column(db.String(20), nullable=False, default='user')
+    confirmed = db.Column(db.Boolean, default=False)
+    confirmation_token = db.Column(db.String(100), unique=True)
 
-    # def get_reset_token (self, expires_sec =1800):
-    #     s = Serializer(app.config['SECRET_KEY'], expires_sec)
-    #     return s.dumps({'user.id': self.id}).decode('utf-8')
+    def get_reset_token (self, expires_sec =1800):
+         s = Serializer(app.config['SECRET_KEY'], expires_sec)
+         return s.dumps({'user.id': self.id}).decode('utf-8')
     
-    # @staticmethod
-    # def validate_token(token):
-    #     None
+    #Validate Token
+    @staticmethod
+    def validate_token_confirmation(token, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token, max_age=expires_sec)
+            user_id = data['user_id']
+            confirmed = data['confirmed']
+        except:
+            return None
+        return User.query.get(user_id) if confirmed else None
+    
+    def validate_token_reset(token, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=expires_sec)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
     #Link to tables.
     user_info = db.relationship('UserInfo', backref='user', lazy=True)
