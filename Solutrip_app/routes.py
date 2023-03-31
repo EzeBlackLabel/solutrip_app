@@ -1,11 +1,17 @@
 import os
-from Solutrip_app import app,db
+from Solutrip_app import app,db,mail
 from flask import render_template, url_for, flash, redirect, request, abort
 from Solutrip_app.models import User, UserInfo, Company, Post, Jobs, JobApplication
-from Solutrip_app.forms import RegistrationForm, LoginForm, UpdateForm,RequestPassForm,PostForm,CompanyForm,JobForm
+from Solutrip_app.forms import (RegistrationForm, LoginForm, UpdateForm, RequestPassForm,
+                                PostForm, CompanyForm, JobForm, ResetPasswordForm)
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 from itertools import groupby
+from flask_mail import Message
+# from itsdangerous import URLSafeTimedSerializer as Serializer
+# from itsdangerous import BadSignature, SignatureExpired
+# from datetime import datetime, timedelta
+# import jwt
 
 @app.route("/")
 @app.route("/home")
@@ -56,6 +62,7 @@ def register():
             user.role = "default"
         db.session.add(user)
         db.session.commit()
+        # send_confirmation_email(user)  # call the send_confirmation_email function
         flash(f"Account created for {form.username.data}!", "success")
         return redirect(url_for('login'))
     return render_template("register.html", title = "Register", form = form)
@@ -67,15 +74,56 @@ def login():
     form = LoginForm()
     if form.validate_on_submit(): # Import Flash and send a confirmation message.
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash (user.password, form.password.data):
-            login_user(user, remember= form.remember.data)
-            #To redirect to next page.
+        if user and check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+        #To redirect to next page.
             next_page = request.args.get('next')
             flash(f"Login successful { form.email.data }!", "success")
             return redirect(next_page) if next_page else redirect(url_for('about'))
-        else:    
+    # elif user and check_password_hash(user.password, form.password.data) and not user.confirmed:
+    #     flash("Your account has not been confirmed. Please check your email for a confirmation link.", "warning")
+        else:
             flash(f"Login unsuccessful, please check username and password.", "danger")
     return render_template("login.html", title = "Login", form = form)
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    confirm_url = url_for('reset_token', token=token, _external=True)
+    subject = "Reset your password"
+    body = f"Hi {user.username},\n\nPlease click on the link below to reset your password:\n{confirm_url}"
+    msg = Message(sender= "Solutrip Team", subject=subject, body=body, recipients=[user.email])
+    mail.send(msg)
+
+
+@app.route("/reset_password", methods=['GET','POST'])
+def reset_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form=RequestPassForm()
+    if form.validate_on_submit():
+        user=User.query.filter_by(email= form.email.data).first()
+        send_reset_email(user)
+        flash (f'An email has been sent with instructions to {form.email.data}', 'info')
+        return redirect (url_for('login'))
+    return render_template("reset_request.html", title="Reset Request", form=form)
+
+@app.route("/reset_password/<token>", methods=['GET','POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('Your token is invakid or expired', 'warning')
+        return redirect(url_for('reset_password'))
+    form=ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        user.password = hashed_password
+        db.session.commit()
+        flash(f"Your password has been updated!", "success")
+        return redirect(url_for('login'))
+    return render_template("reset_password.html", title="Reset Token", form=form)
+
 
 @app.route("/logout")
 def logout():
@@ -127,12 +175,6 @@ def account():
             form.cv.data = userinfo.cv
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template("account.html", title="Account", image_file=image_file, form=form)
-
-@app.route("/requestpassword", methods=['GET', 'POST'])
-def request_pass():
-    form= RequestPassForm()
-    if form.validate_on_submit():
-        None
 
 
 #ADMIN SESSION

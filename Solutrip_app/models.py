@@ -1,8 +1,7 @@
-from Solutrip_app import db, login_manager,app
+from Solutrip_app import db, login_manager, app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -18,26 +17,15 @@ class User(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, default=False)
     confirmation_token = db.Column(db.String(100), unique=True)
 
-    def get_reset_token (self, expires_sec =1800):
-         s = Serializer(app.config['SECRET_KEY'], expires_sec)
-         return s.dumps({'user.id': self.id}).decode('utf-8')
+    def get_reset_token(self, expires_sec=1800):
+        s=Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
     
-    #Validate Token
     @staticmethod
-    def validate_token_confirmation(token, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'])
+    def verify_reset_token(token):
+        s=Serializer(app.config['SECRET_KEY'])
         try:
-            data = s.loads(token, max_age=expires_sec)
-            user_id = data['user_id']
-            confirmed = data['confirmed']
-        except:
-            return None
-        return User.query.get(user_id) if confirmed else None
-    
-    def validate_token_reset(token, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'])
-        try:
-            user_id = s.loads(token, max_age=expires_sec)['user_id']
+            user_id =s.loads(token)['user_id']
         except:
             return None
         return User.query.get(user_id)
@@ -104,4 +92,3 @@ class JobApplication(db.Model):
     # Link to UserInfo table
     user_info_id = db.Column(db.Integer, db.ForeignKey('user_info.id'), nullable=False)
     user_info = db.relationship('UserInfo', backref='applications')
-
