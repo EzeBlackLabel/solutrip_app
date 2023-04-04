@@ -3,15 +3,13 @@ from Solutrip_app import app,db,mail
 from flask import render_template, url_for, flash, redirect, request, abort
 from Solutrip_app.models import User, UserInfo, Company, Post, Jobs, JobApplication
 from Solutrip_app.forms import (RegistrationForm, LoginForm, UpdateForm, RequestPassForm,
-                                PostForm, CompanyForm, JobForm, ResetPasswordForm)
+                                PostForm, CompanyForm, JobForm, ResetPasswordForm, DeleteAccount)
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import current_user, login_user, logout_user, login_required
 from itertools import groupby
 from flask_mail import Message
-# from itsdangerous import URLSafeTimedSerializer as Serializer
-# from itsdangerous import BadSignature, SignatureExpired
-# from datetime import datetime, timedelta
-# import jwt
+from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired
+import jwt
 
 @app.route("/")
 @app.route("/home")
@@ -40,6 +38,15 @@ def blog():
 def about():
     return render_template("about.html", title = "About")
 
+def send_confirmation_email(user):
+    serializer = Serializer(app.config['SECRET_KEY'])
+    token = serializer.dumps(user.id, salt='email-confirm')
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    subject = "Confirm your account!"
+    body = f"Hi {user.username},\n\nPlease click on the link below to confirm your account:\n{confirm_url}"
+    msg = Message(sender= "Solutrip Team", subject=subject, body=body, recipients=[user.email])
+    mail.send(msg)
+
 @app.route("/register", methods= ['GET','POST'])
 def register():
     if current_user.is_authenticated:
@@ -54,7 +61,10 @@ def register():
             username=form.username.data,
             email=form.email.data,
             password= hashed_password,
+            confirmation_token = None,
         )
+        confirmation_token = user.get_reset_token()
+        user.confirmation_token = str(confirmation_token)
         admin_mails = ["ezelevy87@gmail.com", "joe.solutrip@gmail.com", "admin@solutrip.com"]
         if user.email in admin_mails:
             user.role = "admin"
@@ -62,38 +72,56 @@ def register():
             user.role = "default"
         db.session.add(user)
         db.session.commit()
-        # send_confirmation_email(user)  # call the send_confirmation_email function
-        flash(f"Account created for {form.username.data}!", "success")
+        send_confirmation_email(user)
+        flash(f'Account created for {form.username.data}! Please check your email to confirm your account.', 'success')
         return redirect(url_for('login'))
     return render_template("register.html", title = "Register", form = form)
+
+@app.route("/confirm_email/<token>")
+def confirm_email(token):
+    serializer = Serializer(app.config['SECRET_KEY'])
+    try:
+        user_id = serializer.loads(token, salt='email-confirm', max_age=86400)
+        user = User.query.get(user_id)
+        user.confirmed = True
+        db.session.commit()
+        flash(f'Thank you for confirming your email!', 'success')
+        return redirect(url_for('login'))
+    except SignatureExpired:
+        flash(f'The confirmation link has expired.', 'warning')
+        return redirect(url_for('register'))
+    except:
+        flash(f'The confirmation link is invalid.', 'warning')
+        return redirect(url_for('register'))
+
 
 @app.route("/login", methods= ['GET','POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect (url_for('home'))
+        return redirect(url_for('home'))
+
     form = LoginForm()
-    if form.validate_on_submit(): # Import Flash and send a confirmation message.
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-        #To redirect to next page.
-            next_page = request.args.get('next')
-            flash(f"Login successful { form.email.data }!", "success")
-            return redirect(next_page) if next_page else redirect(url_for('about'))
-    # elif user and check_password_hash(user.password, form.password.data) and not user.confirmed:
-    #     flash("Your account has not been confirmed. Please check your email for a confirmation link.", "warning")
+            if user.confirmed:
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get('next')
+                flash(f"Login successful {form.email.data}!", "success")
+                return redirect(next_page) if next_page else redirect(url_for('about'))
+            else:
+                flash("Your account has not been confirmed. Please check your email for a confirmation link.", "warning")
         else:
             flash(f"Login unsuccessful, please check username and password.", "danger")
-    return render_template("login.html", title = "Login", form = form)
+    return render_template("login.html", title = "Login", form=form)
 
 def send_reset_email(user):
-    token = user.get_reset_token()
-    confirm_url = url_for('reset_token', token=token, _external=True)
+    reset_pass = user.get_reset_pass()
+    confirm_url = url_for('reset_token', token=reset_pass, _external=True)
     subject = "Reset your password"
     body = f"Hi {user.username},\n\nPlease click on the link below to reset your password:\n{confirm_url}"
     msg = Message(sender= "Solutrip Team", subject=subject, body=body, recipients=[user.email])
     mail.send(msg)
-
 
 @app.route("/reset_password", methods=['GET','POST'])
 def reset_password():
@@ -174,7 +202,19 @@ def account():
             form.github_account.data = userinfo.github_account
             form.cv.data = userinfo.cv
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template("account.html", title="Account", image_file=image_file, form=form)
+    return render_template("account.html", title="Account", image_file=image_file, form=form, user=userinfo)
+
+@app.route("/delete", methods=['GET', 'POST'])
+@login_required
+def delete_account():
+    form = DeleteAccount()
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=current_user.id).first()
+        db.session.delete(user)
+        db.session.commit()
+        flash("We are sorry to see you go! Your account has been deleted",'danger')
+        return redirect(url_for('home'))
+    return render_template("delete_account.html", title="Delete Account", form=form)
 
 
 #ADMIN SESSION

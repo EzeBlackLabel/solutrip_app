@@ -1,6 +1,7 @@
 from Solutrip_app import db, login_manager, app
 from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import url_for
+from itsdangerous import URLSafeTimedSerializer, TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 
 @login_manager.user_loader
@@ -17,9 +18,25 @@ class User(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, default=False)
     confirmation_token = db.Column(db.String(100), unique=True)
 
-    def get_reset_token(self, expires_sec=1800):
+    def get_reset_pass(self, expires_sec=1800):
         s=Serializer(app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    def get_reset_token(self, expires_sec=1800):
+        s=Serializer(app.config['SECRET_KEY'], expires_sec)
+        reset_pass= s.dumps({'user_id': self.id}).decode('utf-8')
+        email_token = s.dumps({'user_id': self.id, 'email': self.email}, salt='email-verification').decode('utf-8')
+        return reset_pass, email_token
+    
+    @staticmethod
+    def verify_confirmation_token(token, expiration=3600):
+        s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, salt='email-verification', max_age=expiration)
+        except:
+            return None
+        user = User.query.get(user_id)
+        return user
     
     @staticmethod
     def verify_reset_token(token):

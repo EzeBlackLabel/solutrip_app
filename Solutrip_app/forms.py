@@ -64,6 +64,10 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Submit')
 
+class DeleteAccount(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    submit = SubmitField('Delete Account')
+
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
