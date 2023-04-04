@@ -6,8 +6,8 @@ from flask_mail import Mail
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'FLASK_KEY'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///solutrip_site.db'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 login_manager = LoginManager(app)
