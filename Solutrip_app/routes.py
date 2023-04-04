@@ -44,7 +44,7 @@ def send_confirmation_email(user):
     confirm_url = url_for('confirm_email', token=token, _external=True)
     subject = "Confirm your account!"
     body = f"Hi {user.username},\n\nPlease click on the link below to confirm your account:\n{confirm_url}"
-    msg = Message(sender= "Solutrip Team", subject=subject, body=body, recipients=[user.email])
+    msg = Message(sender= ("Solutrip Team", "solutripteam@gmail.com"), subject=subject, body=body, recipients=[user.email])
     mail.send(msg)
 
 @app.route("/register", methods= ['GET','POST'])
@@ -111,16 +111,18 @@ def login():
                 return redirect(next_page) if next_page else redirect(url_for('about'))
             else:
                 flash("Your account has not been confirmed. Please check your email for a confirmation link.", "warning")
+                return redirect(url_for('login'))
         else:
             flash(f"Login unsuccessful, please check username and password.", "danger")
-    return render_template("login.html", title = "Login", form=form)
+    return render_template("login.html", title="Login", form=form)
+
 
 def send_reset_email(user):
     reset_pass = user.get_reset_pass()
     confirm_url = url_for('reset_token', token=reset_pass, _external=True)
     subject = "Reset your password"
     body = f"Hi {user.username},\n\nPlease click on the link below to reset your password:\n{confirm_url}"
-    msg = Message(sender= "Solutrip Team", subject=subject, body=body, recipients=[user.email])
+    msg = Message(sender=("Solutrip Team", "solutripteam@gmail.com"), subject=subject, body=body, recipients=[user.email])
     mail.send(msg)
 
 @app.route("/reset_password", methods=['GET','POST'])
@@ -214,7 +216,8 @@ def delete_account():
         db.session.commit()
         flash("We are sorry to see you go! Your account has been deleted",'danger')
         return redirect(url_for('home'))
-    return render_template("delete_account.html", title="Delete Account", form=form)
+    return render_template('delete_account.html', form=form)
+
 
 
 #ADMIN SESSION

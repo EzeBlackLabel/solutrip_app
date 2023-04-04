@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, TextAreaField, SelectField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, Optional
 from Solutrip_app.models import User, UserInfo, Company
 
 class RegistrationForm(FlaskForm):
@@ -65,9 +65,8 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class DeleteAccount(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email', validators=[Optional()])
     submit = SubmitField('Delete Account')
-
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])

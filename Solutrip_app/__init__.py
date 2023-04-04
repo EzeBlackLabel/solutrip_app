@@ -16,9 +16,9 @@ login_manager.login_message_category = 'info'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'levmatias87@gmail.com'
-app.config['MAIL_PASSWORD'] = 'jlqfeschcfyrxrsd'
-app.config['MAIL_DEFAULT_SENDER'] = 'levmatias87@gmail.com'
+app.config['MAIL_USERNAME'] = 'solutripteam@gmail.com'
+app.config['MAIL_PASSWORD'] = 'ikcglzayncuhulhb'
+app.config['MAIL_DEFAULT_SENDER'] = 'Solutrip Team <solutripteam@gmail.com>'
 app.config['MAIL_MAX_EMAILS'] = None
 app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
