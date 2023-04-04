@@ -44,7 +44,7 @@ def send_confirmation_email(user):
     confirm_url = url_for('confirm_email', token=token, _external=True)
     subject = "Confirm your account!"
     body = f"Hi {user.username},\n\nPlease click on the link below to confirm your account:\n{confirm_url}"
-    msg = Message(sender= ("Solutrip Team", "solutripteam@gmail.com"), subject=subject, body=body, recipients=[user.email])
+    msg = Message(subject=subject, body=body, recipients=[user.email])
     mail.send(msg)
 
 @app.route("/register", methods= ['GET','POST'])
@@ -73,7 +73,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         send_confirmation_email(user)
-        flash(f'Account created for {form.username.data}! Please check your email to confirm your account.', 'success')
+        flash(f'Account created for {form.username.data}! Please check your email to confirm your account - Check your SPAM folder', 'success')
         return redirect(url_for('login'))
     return render_template("register.html", title = "Register", form = form)
 
@@ -122,7 +122,7 @@ def send_reset_email(user):
     confirm_url = url_for('reset_token', token=reset_pass, _external=True)
     subject = "Reset your password"
     body = f"Hi {user.username},\n\nPlease click on the link below to reset your password:\n{confirm_url}"
-    msg = Message(sender=("Solutrip Team", "solutripteam@gmail.com"), subject=subject, body=body, recipients=[user.email])
+    msg = Message(subject=subject, body=body, recipients=[user.email])
     mail.send(msg)
 
 @app.route("/reset_password", methods=['GET','POST'])
@@ -133,7 +133,7 @@ def reset_password():
     if form.validate_on_submit():
         user=User.query.filter_by(email= form.email.data).first()
         send_reset_email(user)
-        flash (f'An email has been sent with instructions to {form.email.data}', 'info')
+        flash (f'An email has been sent with instructions to {form.email.data} - Check your SPAM folder' , 'info')
         return redirect (url_for('login'))
     return render_template("reset_request.html", title="Reset Request", form=form)
 
